@@ -1,7 +1,7 @@
 {
-    "prefix": "",
-    "ownerID": "",
-    "client_id": "",
-    "botname": "",
-    "inviteURL": ""
+    "prefix": "/",
+    "ownerID": "639352891018051584",
+    "client_id": "896629483774296074",
+    "botname": "Scrap Miner",
+    "inviteURL": "https://discord.com/api/oauth2/authorize?client_id=896629483774296074&permissions=8&scope=bot%20applications.commands"
 }
