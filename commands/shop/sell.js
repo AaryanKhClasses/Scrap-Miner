@@ -10,6 +10,8 @@ const items = [
     'diamondOre',
 ]
 
+const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/logo.png'
+
 module.exports = {
     name: 'sell',
     description: 'Sell an item from your inventory',
@@ -22,7 +24,7 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
-            return message.channel.send({ embeds: [embed] })
+            return message.reply({ embeds: [embed] })
         }
 
         if(!args[0]) {
@@ -32,7 +34,8 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`Please specify an item to sell!`)
-            return message.channel.send({ embeds: [embed] })
+            .setThumbnail(thumbnail)
+            return message.reply({ embeds: [embed] })
         }
 
         if(!items.includes(args[0])) {
@@ -42,7 +45,8 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`The item you specified is not valid! Please check the name of the item and try again.`)
-            return message.channel.send({ embeds: [embed] })
+            .setThumbnail(thumbnail)
+            return message.reply({ embeds: [embed] })
         }
 
         /**
@@ -62,7 +66,8 @@ module.exports = {
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
                 .setDescription(`You don't have any **${itemName}** to sell!`)
-                return message.channel.send({ embeds: [embed] })
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
             }
 
             if(userProfile.inventory[item] < amount) {
@@ -72,7 +77,8 @@ module.exports = {
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
                 .setDescription(`You don't have enough **${itemName}** to sell!`)
-                return message.channel.send({ embeds: [embed] })
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
             }
 
             if(amount <= 0) {
@@ -82,7 +88,8 @@ module.exports = {
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
                 .setDescription(`You can't sell less than 1 item!`)
-                return message.channel.send({ embeds: [embed] })
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
             }
 
             const newamt = userProfile.inventory[item] -= amount
@@ -95,7 +102,8 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`Successfully sold ${amount} **${itemName}** for **${currency * amount}** ${currency * amount === 1 ? 'coin' : 'coins'}!`)
-            return message.channel.send({ embeds: [embed] })
+            .setThumbnail(thumbnail)
+            return message.reply({ embeds: [embed] })
         }
 
         const item = args[0]

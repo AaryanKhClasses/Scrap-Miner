@@ -14,7 +14,7 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`You already have started your mining journey! You can start mining by using the \`/mine\` command!`)
-            return message.channel.send({ embeds: [embed] })
+            return message.reply({ embeds: [embed] })
         }
 
         new profile({ userID: message.author.id, currency: 0, pickaxeType: 'Stone', pickaxeSpeed: 5, pickaxeDrops: 1, inventory: {
@@ -30,6 +30,6 @@ module.exports = {
         .setFooter(botname, client.user.displayAvatarURL())
         .setTimestamp()
         .setDescription(`Your mining journey starts now! You can start mining by using the \`/mine\` command!`)
-        message.channel.send({ embeds: [embed] })
+        message.reply({ embeds: [embed] })
     },
 }

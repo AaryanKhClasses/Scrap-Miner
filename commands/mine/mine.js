@@ -14,7 +14,7 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
-            return message.channel.send({ embeds: [embed] })
+            return message.reply({ embeds: [embed] })
         }
 
         /**
@@ -36,7 +36,7 @@ module.exports = {
             .setThumbnail(client.user.displayAvatarURL())
             .setTitle(`Mining...`)
             .setDescription(`Wait for ${speed} more seconds to mine.`)
-            message.channel.send({ embeds: [embed] }).then((msg) => {
+            message.reply({ embeds: [embed] }).then((msg) => {
                 setTimeout(async () => {
                     if(type === 'Stone') {
                         const randomDrops = Math.floor(Math.random() * 2) + 1
