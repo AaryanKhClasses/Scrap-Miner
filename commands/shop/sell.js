@@ -10,7 +10,7 @@ const items = [
     'diamondOre',
 ]
 
-const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/logo.png'
+const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/shop.png'
 
 module.exports = {
     name: 'sell',
