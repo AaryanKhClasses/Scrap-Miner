@@ -4,10 +4,10 @@ const profile = require('../../models/profile')
 
 const items = [
     'stone',
-    'copperOre',
-    'ironOre',
-    'goldOre',
-    'diamondOre',
+    'copperore',
+    'ironore',
+    'goldore',
+    'diamondore',
 ]
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/shop.png'
@@ -38,7 +38,7 @@ module.exports = {
             return message.reply({ embeds: [embed] })
         }
 
-        if(!items.includes(args[0])) {
+        if(!items.includes(args[0].toLowerCase())) {
             const embed = new MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
             .setColor('RED')
