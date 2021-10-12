@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 const profile = require('../../models/profile')
 const { botname } = require('../../config.json')
+const emojis = require('../../utils/emojis.json')
 
 module.exports = {
     name: 'start',
@@ -13,7 +14,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`You already have started your mining journey! You can start mining by using the \`/mine\` command!`)
+            .setDescription(`${emojis.error} You already have started your mining journey! You can start mining by using the \`/mine\` command!`)
             return message.reply({ embeds: [embed] })
         }
 
@@ -29,7 +30,7 @@ module.exports = {
         .setColor('GREEN')
         .setFooter(botname, client.user.displayAvatarURL())
         .setTimestamp()
-        .setDescription(`Your mining journey starts now! You can start mining by using the \`/mine\` command!`)
+        .setDescription(`${emojis.success} Your mining journey starts now! You can start mining by using the \`/mine\` command!`)
         message.reply({ embeds: [embed] })
     },
 }

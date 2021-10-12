@@ -21,6 +21,6 @@ module.exports = {
             `${emojis.copperOre} **Copper Ore:** The second most basic resource. Used to craft advance items.\n` +
             `${emojis.blank} Buying Price: $7 | Selling Price: $5`,
         )
-        message.channel.send({ embeds: [embed] })
+        message.reply({ embeds: [embed] })
     },
 }

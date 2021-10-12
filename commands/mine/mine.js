@@ -2,6 +2,7 @@ const { MessageEmbed } = require('discord.js')
 const { botname } = require('../../config.json')
 const profile = require('../../models/profile.js')
 const { minedStone, minedCopperOre } = require('../../utils/miningQuotes')
+const emojis = require('../../utils/emojis.json')
 
 const stoneThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/stone.png'
 const copperThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/copperOre.png'
@@ -19,7 +20,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
+            .setDescription(`${emojis.error} You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
             .setThumbnail(client.user.displayAvatarURL())
             return message.reply({ embeds: [embed] })
         }

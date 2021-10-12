@@ -1,6 +1,7 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
 const { botname } = require('../../config.json')
 const profile = require('../../models/profile')
+const emojis = require('../../utils/emojis.json')
 
 const items = [
     'stone',
@@ -16,6 +17,36 @@ module.exports = {
     name: 'sell',
     description: 'Sell an item from your inventory',
     async run(client, message, args) {
+        const confirmationRow = new MessageActionRow().addComponents(
+            new MessageButton()
+            .setCustomId('yes')
+            .setLabel('Yes')
+            .setEmoji(emojis.success)
+            .setStyle('SUCCESS'),
+
+            new MessageButton()
+            .setCustomId('no')
+            .setLabel('No')
+            .setEmoji(emojis.error)
+            .setStyle('DANGER'),
+        )
+
+        const disabledRow = new MessageActionRow().addComponents(
+            new MessageButton()
+            .setCustomId('yes')
+            .setLabel('Yes')
+            .setEmoji(emojis.success)
+            .setStyle('SUCCESS')
+            .setDisabled(),
+
+            new MessageButton()
+            .setCustomId('no')
+            .setLabel('No')
+            .setEmoji(emojis.error)
+            .setStyle('DANGER')
+            .setDisabled(),
+        )
+
         const userProfile = await profile.findOne({ userID: message.author.id })
         if(!userProfile) {
             const embed = new MessageEmbed()
@@ -23,7 +54,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
+            .setDescription(`${emojis.error} You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
             .setThumbnail(client.user.displayAvatarURL())
             return message.reply({ embeds: [embed] })
         }
@@ -34,7 +65,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`Please specify an item to sell!`)
+            .setDescription(`${emojis.error} Please specify an item to sell!`)
             .setThumbnail(thumbnail)
             return message.reply({ embeds: [embed] })
         }
@@ -45,7 +76,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`The item you specified is not valid! Please check the name of the item and try again.`)
+            .setDescription(`${emojis.error} The item you specified is not valid! Please check the name of the item and try again.`)
             .setThumbnail(thumbnail)
             return message.reply({ embeds: [embed] })
         }
@@ -66,7 +97,7 @@ module.exports = {
                 .setColor('RED')
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
-                .setDescription(`You don't have any **${itemName}** to sell!`)
+                .setDescription(`${emojis.error} You don't have any **${itemName}** to sell!`)
                 .setThumbnail(thumbnail)
                 return message.reply({ embeds: [embed] })
             }
@@ -77,7 +108,7 @@ module.exports = {
                 .setColor('RED')
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
-                .setDescription(`You don't have enough **${itemName}** to sell!`)
+                .setDescription(`${emojis.error} You don't have enough **${itemName}** to sell!`)
                 .setThumbnail(thumbnail)
                 return message.reply({ embeds: [embed] })
             }
@@ -88,23 +119,35 @@ module.exports = {
                 .setColor('RED')
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
-                .setDescription(`You can't sell less than 1 item!`)
+                .setDescription(`${emojis.error} You can't sell less than 1 item!`)
                 .setThumbnail(thumbnail)
                 return message.reply({ embeds: [embed] })
             }
 
-            const newamt = userProfile.inventory[item] -= amount
-            const newcurrency = userProfile.currency += currency * amount
-            await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${item}`]: newamt }, currency: newcurrency }, { upsert: true })
-
-            const embed = new MessageEmbed()
+            const confirmation = new MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-            .setColor('GREEN')
+            .setColor('BLUE')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`Successfully sold ${amount} **${itemName}** for **${currency * amount}** ${currency * amount === 1 ? 'coin' : 'coins'}!`)
-            .setThumbnail(thumbnail)
-            return message.reply({ embeds: [embed] })
+            .setDescription(`${emojis.question} Are you sure you want to sell **${amount} ${itemName}**? You will get ${currency * amount === 1 ? emojis.coin : emojis.coins} **${currency * amount}** in return.`)
+            message.reply({ embeds: [confirmation], components: [confirmationRow] })
+
+            client.on('interactionCreate', async (interaction) => {
+                if(interaction.customId === 'yes') {
+                    const newamt = userProfile.inventory[item] -= amount
+                    const newcurrency = userProfile.currency += currency * amount
+                    await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${item}`]: newamt }, currency: newcurrency }, { upsert: true })
+
+                    const embed = new MessageEmbed()
+                    .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                    .setColor('GREEN')
+                    .setFooter(botname, client.user.displayAvatarURL())
+                    .setTimestamp()
+                    .setDescription(`${emojis.success} Successfully sold ${amount} **${itemName}** for **${currency * amount}** ${currency * amount === 1 ? 'coin' : 'coins'}!`)
+                    .setThumbnail(thumbnail)
+                    interaction.update({ embeds: [embed], components: [disabledRow] })
+                } else interaction.update({ embeds: [confirmation], components: [disabledRow] })
+            })
         }
 
         const item = args[0]

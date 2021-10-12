@@ -5,5 +5,10 @@
     "copperOre": "<:copperOre:897351243087896627>",
     "ironOre": "<:ironOre:897351243427614740>",
     "goldOre": "<:goldOre:897351243343724564>",
-    "diamondOre": "<:diamondOre:897351243410866256>"
+    "diamondOre": "<:diamondOre:897351243410866256>",
+    "error": "<:error:897370088905265152>",
+    "success": "<:success:897370088699736085>",
+    "question": "<:question:897370088641028108>",
+    "coin": "<:coin:897370088699736086>",
+    "coins": "<:coins:897370089119186954>"
 }
