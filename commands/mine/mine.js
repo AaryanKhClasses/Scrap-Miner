@@ -54,28 +54,32 @@ module.exports = {
                 setTimeout(async () => {
                     if(type === 'Stone') {
                         const randomDrops = Math.floor(Math.random() * 2) + 1
-                        if(randomDrops === 1) {
-                            const currentStone = userProfile.inventory.stone || 0
-                            const stone = currentStone + mined
-                            await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { 'inventory.stone': stone } }, { upsert: true })
-
-                            embed.setTitle(`Successful mining mission!`)
-                            embed.setDescription(minedStone(type, mined)[Math.floor(Math.random() * minedStone.length)])
-                            embed.setThumbnail(stoneThumbnail)
-                            msg.edit({ embeds: [embed] })
-                        } else {
-                            const currentCopper = userProfile.inventory.copperOre || 0
-                            const copperOre = currentCopper + mined
-                            await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { 'inventory.copperOre': copperOre } }, { upsert: true })
-
-                            embed.setTitle(`Successful mining mission!`)
-                            embed.setDescription(minedCopperOre(type, mined)[Math.floor(Math.random() * minedCopperOre.length)])
-                            embed.setThumbnail(copperThumbnail)
-                            msg.edit({ embeds: [embed] })
-                        }
+                        if(randomDrops === 1) afterMined('stone', minedStone, mined, embed, stoneThumbnail, msg)
+                        else afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
                     }
                 }, speed * 1000)
             })
+        }
+
+        /**
+         *
+         * @param {String} type The type of ore to mine
+         * @param {String} minedType The type of random mining quote imported from randomQuotes.js
+         * @param {Number} minedItems The number of mined items
+         * @param {MessageEmbed} embed The Discord.MessageEmbed() object
+         * @param {String} thumbnail The thumbnail of the mined item
+         * @param {Message} msg The message itself of which the embed is a part
+        */
+
+        async function afterMined(type, minedType, minedItems, editedEmbed, thumbnailType, msg) {
+            const currentType = userProfile.inventory[type] || 0
+            const newType = currentType + minedItems
+            await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${type}`]: newType } }, { upsert: true })
+
+            editedEmbed.setTitle(`Successful mining mission!`)
+            editedEmbed.setDescription(minedType(type, minedItems)[Math.floor(Math.random() * minedType.length)])
+            editedEmbed.setThumbnail(thumbnailType)
+            msg.edit({ embeds: [editedEmbed] })
         }
 
         if(userProfile.pickaxeType === 'Stone') mine('Stone', 5, 1)
@@ -85,4 +89,3 @@ module.exports = {
         if(userProfile.pickaxeType === 'Diamond') mine('Diamond', 3, 3)
     },
 }
-
