@@ -3,6 +3,12 @@ const { botname } = require('../../config.json')
 const profile = require('../../models/profile.js')
 const { minedStone, minedCopperOre } = require('../../utils/miningQuotes')
 
+const stoneThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/stone.png'
+const copperThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/copperOre.png'
+const ironThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/ironOre.png'
+const goldThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/goldOre.png'
+const diamondThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/diamondOre.png'
+
 module.exports = {
     name: 'mine',
     async run(client, message, args) {
@@ -14,6 +20,7 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
+            .setThumbnail(client.user.displayAvatarURL())
             return message.reply({ embeds: [embed] })
         }
 
@@ -47,6 +54,7 @@ module.exports = {
 
                             embed.setTitle(`Successful mining mission!`)
                             embed.setDescription(minedStone(type, mined)[Math.floor(Math.random() * minedStone.length)])
+                            embed.setThumbnail(stoneThumbnail)
                             msg.edit({ embeds: [embed] })
                         } else {
                             const currentCopper = userProfile.inventory.copperOre || 0
@@ -55,6 +63,7 @@ module.exports = {
 
                             embed.setTitle(`Successful mining mission!`)
                             embed.setDescription(minedCopperOre(type, mined)[Math.floor(Math.random() * minedCopperOre.length)])
+                            embed.setThumbnail(copperThumbnail)
                             msg.edit({ embeds: [embed] })
                         }
                     }

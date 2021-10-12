@@ -24,6 +24,7 @@ module.exports = {
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
             .setDescription(`You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
+            .setThumbnail(client.user.displayAvatarURL())
             return message.reply({ embeds: [embed] })
         }
 
