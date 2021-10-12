@@ -44,6 +44,12 @@ module.exports = {
             .setTitle(`Mining...`)
             .setDescription(`Wait for ${speed} more seconds to mine.`)
             message.reply({ embeds: [embed] }).then((msg) => {
+                for(let i = 0; i < speed; i++) {
+                    setTimeout(() => {
+                        embed.setDescription(`Wait for ${speed - i} more ${speed - i === 1 ? 'second' : 'seconds'} to mine.`)
+                        msg.edit({ embeds: [embed] })
+                    }, (i + 1) * 1000)
+                }
                 setTimeout(async () => {
                     if(type === 'Stone') {
                         const randomDrops = Math.floor(Math.random() * 2) + 1
@@ -72,6 +78,10 @@ module.exports = {
         }
 
         if(userProfile.pickaxeType === 'Stone') mine('Stone', 5, 1)
+        if(userProfile.pickaxeType === 'Copper') mine('Copper', 4, 1)
+        if(userProfile.pickaxeType === 'Iron') mine('Iron', 4, 2)
+        if(userProfile.pickaxeType === 'Gold') mine('Gold', 3, 2)
+        if(userProfile.pickaxeType === 'Diamond') mine('Diamond', 3, 3)
     },
 }
 

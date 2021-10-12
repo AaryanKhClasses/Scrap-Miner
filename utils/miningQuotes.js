@@ -19,5 +19,5 @@ module.exports.minedStone = (type, mined) => [
 
 module.exports.minedCopperOre = (type, mined) => [
     `You went in the mines, not much deep with your trusty **${type} Pickaxe** and came back with ${mined} copper ore!`,
-    `Imagine mining copper with a ${type} pickaxe. Anyway u got ${mined} copper!`,
+    `Imagine mining copper with a **${type} pickaxe**. Anyway u got ${mined} copper!`,
 ]
