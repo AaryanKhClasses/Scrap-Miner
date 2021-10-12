@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 const { botname } = require('../../config.json')
 const profile = require('../../models/profile.js')
-const { minedStone, minedCopperOre } = require('../../utils/miningQuotes')
+const { minedStone, minedCopperOre, minedIronOre } = require('../../utils/miningQuotes')
 const emojis = require('../../utils/emojis.json')
 
 const stoneThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/stone.png'
@@ -27,14 +27,14 @@ module.exports = {
 
         /**
          *
-         * @param {String} type Type of pickaxe, the higher the type, the better the drops
          * @param {Number} speed The amount of duration for each time you mine
          * @param {Number} drops The multiplier for how much amount of each material you mine.
         */
 
-        function mine(type, speed, drops) {
+        function mine(speed, drops) {
             const random = Math.floor(Math.random() * 10) + 1
             const mined = random * drops
+            const type = userProfile.pickaxeType
 
             const embed = new MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
@@ -56,6 +56,11 @@ module.exports = {
                         const randomDrops = Math.floor(Math.random() * 2) + 1
                         if(randomDrops === 1) afterMined('stone', minedStone, mined, embed, stoneThumbnail, msg)
                         else afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
+                    } else if(type === 'Copper') {
+                        const randomDrops = Math.floor(Math.random() * 4) + 1
+                        if(randomDrops === 1) afterMined('stone', minedStone, mined, embed, stoneThumbnail, msg)
+                        else if(randomDrops === 2 || randomDrops === 3) afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
+                        else afterMined('ironOre', minedIronOre, mined, embed, ironThumbnail, msg)
                     }
                 }, speed * 1000)
             })
@@ -71,21 +76,22 @@ module.exports = {
          * @param {Message} msg The message itself of which the embed is a part
         */
 
-        async function afterMined(type, minedType, minedItems, editedEmbed, thumbnailType, msg) {
+         async function afterMined(type, minedType, minedItems, editedEmbed, thumbnailType, msg) {
+            const pickaxeType = userProfile.pickaxeType
             const currentType = userProfile.inventory[type] || 0
             const newType = currentType + minedItems
             await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${type}`]: newType } }, { upsert: true })
 
             editedEmbed.setTitle(`Successful mining mission!`)
-            editedEmbed.setDescription(minedType(type, minedItems)[Math.floor(Math.random() * minedType.length)])
+            editedEmbed.setDescription(minedType(pickaxeType, minedItems)[Math.floor(Math.random() * minedType.length)])
             editedEmbed.setThumbnail(thumbnailType)
             msg.edit({ embeds: [editedEmbed] })
         }
 
-        if(userProfile.pickaxeType === 'Stone') mine('Stone', 5, 1)
-        if(userProfile.pickaxeType === 'Copper') mine('Copper', 4, 1)
-        if(userProfile.pickaxeType === 'Iron') mine('Iron', 4, 2)
-        if(userProfile.pickaxeType === 'Gold') mine('Gold', 3, 2)
-        if(userProfile.pickaxeType === 'Diamond') mine('Diamond', 3, 3)
+        if(userProfile.pickaxeType === 'Stone') mine(5, 1)
+        if(userProfile.pickaxeType === 'Copper') mine(4, 1)
+        if(userProfile.pickaxeType === 'Iron') mine(4, 2)
+        if(userProfile.pickaxeType === 'Gold') mine(3, 2)
+        if(userProfile.pickaxeType === 'Diamond') mine(3, 3)
     },
 }
