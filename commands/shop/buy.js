@@ -4,28 +4,25 @@ const profile = require('../../models/profile')
 const emojis = require('../../utils/emojis.json')
 
 const items = [
-    'stone',
+    'stone', 'furnace',
     'copperore',
-    'ironore',
-    'goldore',
-    'diamondore',
 ]
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/shop.png'
 
 module.exports = {
-    name: 'sell',
-    description: 'Sell an item from your inventory',
+    name: 'buy',
+    description: 'Buy an item from the shop',
     async run(client, message, args) {
         const confirmationRow = new MessageActionRow().addComponents(
             new MessageButton()
-            .setCustomId('sell-yes')
+            .setCustomId('buy-yes')
             .setLabel('Yes')
             .setEmoji(emojis.success)
             .setStyle('SUCCESS'),
 
             new MessageButton()
-            .setCustomId('sell-no')
+            .setCustomId('buy-no')
             .setLabel('No')
             .setEmoji(emojis.error)
             .setStyle('DANGER'),
@@ -33,14 +30,14 @@ module.exports = {
 
         const disabledRow = new MessageActionRow().addComponents(
             new MessageButton()
-            .setCustomId('sell-dis-yes')
+            .setCustomId('buy-dis-yes')
             .setLabel('Yes')
             .setEmoji(emojis.success)
             .setStyle('SUCCESS')
             .setDisabled(),
 
             new MessageButton()
-            .setCustomId('sell-dis-no')
+            .setCustomId('buy-dis-no')
             .setLabel('No')
             .setEmoji(emojis.error)
             .setStyle('DANGER')
@@ -65,7 +62,7 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`${emojis.error} Please specify an item to sell!`)
+            .setDescription(`${emojis.error} Please specify an item to buy from the shop!\n${emojis.blank} Use the \`/shop\` command to view the list of items you can buy.`)
             .setThumbnail(thumbnail)
             return message.reply({ embeds: [embed] })
         }
@@ -76,50 +73,40 @@ module.exports = {
             .setColor('RED')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`${emojis.error} The item you specified is not valid! Please check the name of the item and try again.`)
+            .setDescription(`${emojis.error} The item you specified is not valid! Please check the name of the item and try again.\n${emojis.blank} Use the \`/shop\` command to view the list of items you can buy.`)
             .setThumbnail(thumbnail)
             return message.reply({ embeds: [embed] })
         }
 
         /**
          *
-         * @param {String} item The name (namespace) of the item to sell.
-         * @param {Number} amount The amount of the item to sell.
-         * @param {Number} currency The amount of money to give the user after the item is sold.
-         * @param {String} itemName The displayed name of the item to sell.
-         */
+         * @param {String} item The name (namespace) of the item to buy.
+         * @param {Number} amount The amount of the items to buy.
+         * @param {Number} currency The amount of money to pay after the item is purchased.
+         * @param {String} itemName The displayed name of the item to buy.
+        */
 
-        async function sell(item, amount, currency, itemName) {
+         async function buy(item, amount, currency, itemName) {
+            if(typeof amount !== 'number') amount = parseInt(amount)
             if(!amount) amount = 1
-            if(userProfile.inventory[item] < 1) {
-                const embed = new MessageEmbed()
-                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-                .setColor('RED')
-                .setFooter(botname, client.user.displayAvatarURL())
-                .setTimestamp()
-                .setDescription(`${emojis.error} You don't have any **${itemName}** to sell!`)
-                .setThumbnail(thumbnail)
-                return message.reply({ embeds: [embed] })
-            }
-
-            if(userProfile.inventory[item] < amount) {
-                const embed = new MessageEmbed()
-                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-                .setColor('RED')
-                .setFooter(botname, client.user.displayAvatarURL())
-                .setTimestamp()
-                .setDescription(`${emojis.error} You don't have enough **${itemName}** to sell!`)
-                .setThumbnail(thumbnail)
-                return message.reply({ embeds: [embed] })
-            }
-
             if(amount <= 0) {
                 const embed = new MessageEmbed()
                 .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
                 .setColor('RED')
                 .setFooter(botname, client.user.displayAvatarURL())
                 .setTimestamp()
-                .setDescription(`${emojis.error} You can't sell less than 1 item!`)
+                .setDescription(`${emojis.error} You can't buy less than 1 item from the shop!`)
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
+            }
+
+            if(currency * amount > userProfile.currency) {
+                const embed = new MessageEmbed()
+                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                .setColor('RED')
+                .setFooter(botname, client.user.displayAvatarURL())
+                .setTimestamp()
+                .setDescription(`${emojis.error} You don't have enough coins to buy ${amount} ${itemName}!`)
                 .setThumbnail(thumbnail)
                 return message.reply({ embeds: [embed] })
             }
@@ -129,13 +116,14 @@ module.exports = {
             .setColor('BLUE')
             .setFooter(botname, client.user.displayAvatarURL())
             .setTimestamp()
-            .setDescription(`${emojis.question} Are you sure you want to sell **${amount} ${itemName}**? You will get ${currency * amount === 1 ? emojis.coin : emojis.coins} **${currency * amount}** in return.`)
+            .setDescription(`${emojis.question} Are you sure you want to buy **${amount} ${itemName}**? You will have to pay ${currency * amount === 1 ? emojis.coin : emojis.coins} **${currency * amount}** for it.`)
             message.reply({ embeds: [confirmation], components: [confirmationRow] })
 
             client.on('interactionCreate', async (interaction) => {
-                if(interaction.customId === 'sell-yes') {
-                    const newamt = userProfile.inventory[item] -= amount
-                    const newcurrency = userProfile.currency += currency * amount
+                if(interaction.customId === 'buy-yes') {
+                    let currentamt = userProfile.inventory[item] || 0
+                    const newamt = currentamt += amount
+                    const newcurrency = userProfile.currency -= currency * amount
                     await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${item}`]: newamt }, currency: newcurrency }, { upsert: true })
 
                     const embed = new MessageEmbed()
@@ -143,7 +131,7 @@ module.exports = {
                     .setColor('GREEN')
                     .setFooter(botname, client.user.displayAvatarURL())
                     .setTimestamp()
-                    .setDescription(`${emojis.success} Successfully sold ${amount} **${itemName}** for **${currency * amount}** ${currency * amount === 1 ? 'coin' : 'coins'}!`)
+                    .setDescription(`${emojis.success} Successfully purchased ${amount} **${itemName}** for **${currency * amount}** ${currency * amount === 1 ? 'coin' : 'coins'}!`)
                     .setThumbnail(thumbnail)
                     interaction.update({ embeds: [embed], components: [disabledRow] })
                 } else interaction.update({ embeds: [confirmation], components: [disabledRow] })
@@ -152,7 +140,8 @@ module.exports = {
 
         const item = args[0]
         const amount = args[1]
-        if(item.toLowerCase() === 'stone') sell('stone', amount, 1, 'stone')
-        if(item.toLowerCase() === 'copperore') sell('copperOre', amount, 5, 'copper ore')
+        if(item.toLowerCase() === 'stone') buy('stone', amount, 3, 'stone')
+        if(item.toLowerCase() === 'copperore') buy('copperore', amount, 3, 'copper ore')
+        if(item.toLowerCase() === 'furnace') buy('furnace', amount, 50, 'furnace')
     },
 }

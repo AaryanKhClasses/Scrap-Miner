@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 const { botname } = require('../../config.json')
 const profile = require('../../models/profile.js')
-const { minedStone, minedCopperOre, minedIronOre } = require('../../utils/miningQuotes')
+const { minedStone, minedCopperOre, minedIronOre, minedGoldOre, minedDiamondOre } = require('../../utils/miningQuotes')
 const emojis = require('../../utils/emojis.json')
 
 const stoneThumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/stone.png'
@@ -61,6 +61,23 @@ module.exports = {
                         if(randomDrops === 1) afterMined('stone', minedStone, mined, embed, stoneThumbnail, msg)
                         else if(randomDrops === 2 || randomDrops === 3) afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
                         else afterMined('ironOre', minedIronOre, mined, embed, ironThumbnail, msg)
+                    } else if(type === 'Iron') {
+                        const randomDrops = Math.floor(Math.random() * 6) + 1
+                        if(randomDrops === 1) afterMined('stone', minedStone, mined, embed, stoneThumbnail, msg)
+                        else if(randomDrops === 2 || randomDrops === 3) afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
+                        else if(randomDrops === 4 || randomDrops === 5) afterMined('ironOre', minedIronOre, mined, embed, ironThumbnail, msg)
+                        else afterMined('goldOre', minedGoldOre, mined, embed, goldThumbnail, msg)
+                    } else if(type === 'Gold') {
+                        const randomDrops = Math.floor(Math.random() * 8) + 1
+                        if(randomDrops === 1) afterMined('copperOre', minedCopperOre, mined, embed, copperThumbnail, msg)
+                        else if(randomDrops === 2 || randomDrops === 3 || randomDrops === 4) afterMined('ironOre', minedIronOre, mined, embed, ironThumbnail, msg)
+                        else if(randomDrops === 5 || randomDrops === 6 || randomDrops === 7) afterMined('goldOre', minedGoldOre, mined, embed, goldThumbnail, msg)
+                        else afterMined('diamondOre', minedDiamondOre, mined, embed, diamondThumbnail, msg)
+                    } else if(type === 'Diamond') {
+                        const randomDrops = Math.floor(Math.random() * 8) + 1
+                        if(randomDrops === 1 || randomDrops === 2 || randomDrops === 3) afterMined('ironOre', minedIronOre, mined, embed, ironThumbnail, msg)
+                        else if(randomDrops === 4 || randomDrops === 5 || randomDrops === 6) afterMined('goldOre', minedGoldOre, mined, embed, goldThumbnail, msg)
+                        else afterMined('diamondOre', minedDiamondOre, mined, embed, diamondThumbnail, msg)
                     }
                 }, speed * 1000)
             })
