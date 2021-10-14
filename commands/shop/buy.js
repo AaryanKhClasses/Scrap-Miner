@@ -84,9 +84,10 @@ module.exports = {
          * @param {Number} amount The amount of the items to buy.
          * @param {Number} currency The amount of money to pay after the item is purchased.
          * @param {String} itemName The displayed name of the item to buy.
+         * @param {Number} maxItems The maximum amount of items that the user can have in inventory.
         */
 
-         async function buy(item, amount, currency, itemName) {
+         async function buy(item, amount, currency, itemName, maxItems = Infinity) {
             if(typeof amount !== 'number') amount = parseInt(amount)
             if(!amount) amount = 1
             if(amount <= 0) {
@@ -111,6 +112,17 @@ module.exports = {
                 return message.reply({ embeds: [embed] })
             }
 
+            if(userProfile.inventory[item] + amount > maxItems) {
+                const embed = new MessageEmbed()
+                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                .setColor('RED')
+                .setFooter(botname, client.user.displayAvatarURL())
+                .setTimestamp()
+                .setDescription(`${emojis.error} You can't have more than ${maxItems} ${itemName} in your inventory!`)
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
+            }
+
             const confirmation = new MessageEmbed()
             .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
             .setColor('BLUE')
@@ -122,8 +134,8 @@ module.exports = {
             client.on('interactionCreate', async (interaction) => {
                 if(interaction.customId === 'buy-yes') {
                     let currentamt = userProfile.inventory[item] || 0
-                    const newamt = currentamt += amount
-                    const newcurrency = userProfile.currency -= currency * amount
+                    const newamt = currentamt + amount
+                    const newcurrency = userProfile.currency - currency * amount
                     await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${item}`]: newamt }, currency: newcurrency }, { upsert: true })
 
                     const embed = new MessageEmbed()
@@ -141,7 +153,7 @@ module.exports = {
         const item = args[0]
         const amount = args[1]
         if(item.toLowerCase() === 'stone') buy('stone', amount, 3, 'stone')
-        if(item.toLowerCase() === 'copperore') buy('copperore', amount, 3, 'copper ore')
-        if(item.toLowerCase() === 'furnace') buy('furnace', amount, 50, 'furnace')
+        if(item.toLowerCase() === 'copperore') buy('copperOre', amount, 3, 'copper ore')
+        if(item.toLowerCase() === 'furnace') buy('furnace', amount, 50, 'furnace', 1)
     },
 }

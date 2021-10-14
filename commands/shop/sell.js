@@ -134,8 +134,8 @@ module.exports = {
 
             client.on('interactionCreate', async (interaction) => {
                 if(interaction.customId === 'sell-yes') {
-                    const newamt = userProfile.inventory[item] -= amount
-                    const newcurrency = userProfile.currency += currency * amount
+                    const newamt = userProfile.inventory[item] - amount
+                    const newcurrency = userProfile.currency + currency * amount
                     await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, $set: { [`inventory.${item}`]: newamt }, currency: newcurrency }, { upsert: true })
 
                     const embed = new MessageEmbed()
