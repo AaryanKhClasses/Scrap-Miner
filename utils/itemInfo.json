@@ -1,0 +1,32 @@
+{
+    "stone": {
+        "name": "Stone"
+    },
+    "copperOre": {
+        "name": "Copper Ore"
+    },
+    "ironOre": {
+        "name": "Iron Ore"
+    },
+    "goldOre": {
+        "name": "Gold Ore"
+    },
+    "diamondOre": {
+        "name": "Diamond Ore"
+    },
+    "furnace": {
+        "name": "Furnace"
+    },
+    "copper": {
+        "name": "Copper Ingot"
+    },
+    "iron": {
+        "name": "Iron Ingot"
+    },
+    "gold": {
+        "name": "Gold Ingot"
+    },
+    "diamond": {
+        "name": "Diamond"
+    }
+}

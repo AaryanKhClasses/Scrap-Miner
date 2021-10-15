@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 const { botname } = require('../../config.json')
 const profile = require('../../models/profile')
-const itemNames = require('../../utils/itemNames.json')
+const itemInfo = require('../../utils/itemInfo.json')
 const emojis = require('../../utils/emojis.json')
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/inventory.png'
@@ -40,10 +40,12 @@ module.exports = {
             return message.reply({ embeds: [embed] })
         }
 
+        console.log(itemInfo)
+
         const items = Array.from(Object.keys(userProfile.inventory))
         .filter(item => userProfile.inventory[item] > 0)
         .sort((a, b) => userProfile.inventory[b] - userProfile.inventory[a])
-        .map(item => `${emojis[item]} ${itemNames[item]} x${userProfile.inventory[item]}`)
+        .map(item => `${emojis[item]} ${itemInfo[item].name} x${userProfile.inventory[item]}`)
         .join(`\n ${emojis.blank}`)
 
         const embed = new MessageEmbed()
