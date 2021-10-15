@@ -40,8 +40,6 @@ module.exports = {
             return message.reply({ embeds: [embed] })
         }
 
-        console.log(itemInfo)
-
         const items = Array.from(Object.keys(userProfile.inventory))
         .filter(item => userProfile.inventory[item] > 0)
         .sort((a, b) => userProfile.inventory[b] - userProfile.inventory[a])
