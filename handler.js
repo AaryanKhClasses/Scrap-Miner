@@ -3,6 +3,7 @@ const { Collection, MessageEmbed } = require('discord.js')
 const fs = require('fs')
 const config = require('./config.json')
 const emojis = require('./utils/emojis.json')
+const profile = require('./models/profile')
 
 const { botname, prefix } = config
 
@@ -26,6 +27,24 @@ module.exports = (client) => {
         const command = client.commands.get(commandName) // Gets the command
             || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)) // Gets the command by alias
         if(!command) return // If the command does not exist, do nothing
+
+        if(command.name !== 'start') {
+            const userProfile = await profile.findOne({ userID: message.author.id })
+            if(!userProfile) {
+                const embed = new MessageEmbed()
+                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                .setColor('RED')
+                .setFooter(botname, client.user.displayAvatarURL())
+                .setTimestamp()
+                .setDescription(`${emojis.error} You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
+                .setThumbnail(client.user.displayAvatarURL())
+                return message.reply({ embeds: [embed] })
+            }
+
+            let cmdsUsed = userProfile.cmdsUsed || 0
+            cmdsUsed++
+            await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, cmdsUsed: cmdsUsed }, { upsert: true })
+        }
 
         const { cooldowns } = client // Gets the cooldowns
         if(!cooldowns.has(command.name)) cooldowns.set(command.name, new Collection()) // If the cooldowns do not have the command, set it to a new collection

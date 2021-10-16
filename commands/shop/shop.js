@@ -8,17 +8,6 @@ module.exports = {
     aliases: ['store', 'market'],
     async run(client, message, args) {
         const userProfile = await profile.findOne({ userID: message.author.id })
-        if(!userProfile) {
-            const embed = new MessageEmbed()
-            .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
-            .setColor('RED')
-            .setFooter(botname, client.user.displayAvatarURL())
-            .setTimestamp()
-            .setDescription(`${emojis.error} You haven't started your mining jouney yet! Start your mining jouney by using the \`/start\` command.`)
-            .setThumbnail(client.user.displayAvatarURL())
-            return message.reply({ embeds: [embed] })
-        }
-
         const embed = new MessageEmbed()
         .setTitle('Scrap Miner - Shop')
         .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))

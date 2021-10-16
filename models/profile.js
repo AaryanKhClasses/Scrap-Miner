@@ -6,6 +6,7 @@ const profileSchema = new mongoose.Schema({
     pickaxeType: String, // Stone > Copper > Iron > Gold > Diamond,
     pickaxeSpeed: Number,
     pickaxeDrops: Number,
+    cmdsUsed: Number,
     inventory: Object, // name: amount
 })
 
