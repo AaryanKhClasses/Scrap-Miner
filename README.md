@@ -48,6 +48,6 @@ You can contribute to this repository / project, you can open a [pull request]. 
 [Discord Bot]:https://discord.com/developers/applications
 [MongoDB]:https://mongodb.com
 [Node.JS]:https://nodejs.org
-[pull request]:/pulls
-[issue]:/issues
+[pull request]:https://github.com/AaryanKhClasses/Scrap-Miner/pulls
+[issue]:https://github.com/AaryanKhClasses/Scrap-Miner/issues
 [Click Here]:https://discord.com/api/oauth2/authorize?client_id=896629483774296074&permissions=8&scope=bot%20applications.commands
