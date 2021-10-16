@@ -18,7 +18,7 @@ module.exports = {
             return message.reply({ embeds: [embed] })
         }
 
-        new profile({ userID: message.author.id, currency: 0, pickaxeType: 'Stone', pickaxeSpeed: 5, pickaxeDrops: 1, inventory: {
+        new profile({ userID: message.author.id, currency: 0, pickaxeType: 'Stone', pickaxeSpeed: 5, pickaxeDrops: 1, advancements: ['Start of a new journey!'], inventory: {
             stone: 0,
             copperOre: 0,
             ironOre: 0,
@@ -32,5 +32,19 @@ module.exports = {
         .setTimestamp()
         .setDescription(`${emojis.success} Your mining journey starts now! You can start mining by using the \`/mine\` command!`)
         message.reply({ embeds: [embed] })
+
+        setTimeout(() => {
+            const advEmbed = new MessageEmbed()
+            .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+            .setColor('GREEN')
+            .setFooter(botname, client.user.displayAvatarURL())
+            .setTimestamp()
+            .setTitle('New Advancement Unlocked!')
+            .setDescription(`${emojis.success} This is your first advancement! Play more to earn more of these!`)
+            message.reply({ embeds: [advEmbed] }).then((msg) => {
+                advEmbed.setTitle('Start of a new journey!')
+                setTimeout(() => msg.edit({ embeds: [advEmbed] }), 2000)
+            })
+        }, 2000)
     },
 }

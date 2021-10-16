@@ -7,6 +7,7 @@ const profileSchema = new mongoose.Schema({
     pickaxeSpeed: Number,
     pickaxeDrops: Number,
     cmdsUsed: Number,
+    advancements: [String],
     inventory: Object, // name: amount
 })
 
