@@ -5,10 +5,10 @@ const emojis = require('../../utils/emojis.json')
 
 const items = [
     'stone',
-    'copperore',
-    'ironore',
-    'goldore',
-    'diamondore',
+    'copperore', 'copper',
+    'ironore', 'iron',
+    'goldore', 'gold',
+    'diamondore', 'diamond',
 ]
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/shop.png'
@@ -143,5 +143,12 @@ module.exports = {
         const amount = args[1]
         if(item.toLowerCase() === 'stone') sell('stone', amount, 1, 'stone')
         if(item.toLowerCase() === 'copperore') sell('copperOre', amount, 5, 'copper ore')
+        if(item.toLowerCase() === 'copper') sell('copper', amount, 20, 'copper ingot')
+        if(item.toLowerCase() === 'ironOre') sell('ironOre', amount, 20, 'iron ore')
+        if(item.toLowerCase() === 'iron') sell('iron', amount, 50, 'iron ingot')
+        if(item.toLowerCase() === 'goldOre') sell('goldOre', amount, 50, 'gold ore')
+        if(item.toLowerCase() === 'gold') sell('gold', amount, 100, 'gold ingot')
+        if(item.toLowerCase() === 'diamondOre') sell('diamondOre', amount, 100, 'diamond ore')
+        if(item.toLowerCase() === 'diamond') sell('diamond', amount, 200, 'diamond')
     },
 }

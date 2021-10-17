@@ -7,6 +7,7 @@ const items = [
     'copper',
     'iron',
     'gold',
+    'diamond',
 ]
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/furnace.png'
@@ -115,5 +116,8 @@ module.exports = {
         const item = args[0]
         const amount = args[1]
         if(item.toLowerCase() === 'copper') smelt('copperOre', item, amount, 10, 'copper ore', 'copper ingots')
+        if(item.toLowerCase() === 'iron') smelt('ironOre', item, amount, 15, 'iron ore', 'iron ingots')
+        if(item.toLowerCase() === 'gold') smelt('goldOre', item, amount, 20, 'gold ore', 'gold ingots')
+        if(item.toLowerCase() === 'diamond') smelt('diamondOre', item, amount, 30, 'diamond ore', 'diamond')
     },
 }

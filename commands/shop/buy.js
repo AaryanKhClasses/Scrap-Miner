@@ -5,7 +5,10 @@ const emojis = require('../../utils/emojis.json')
 
 const items = [
     'stone', 'furnace',
-    'copperore',
+    'copperore', 'copperpickaxe',
+    'ironOre', 'ironpickaxe',
+    'goldOre', 'goldpickaxe',
+    'diamondOre', 'diamondpickaxe',
 ]
 
 const thumbnail = 'https://raw.githubusercontent.com/AaryanKhClasses/Scrap-Miner/main/assets/shop.png'
@@ -139,10 +142,61 @@ module.exports = {
             })
         }
 
+        /**
+         *
+         * @param {String} pickaxeType The type of pickaxe to buy.
+         * @param {Number} currency The amount of coins required to buy the pickaxe.
+         * @param {String} displayName The displayed name of the pickaxe.
+         */
+
+        async function buyPickaxe(pickaxeType, currency, displayName) {
+            const pickaxes = ['copperPickaxe', 'ironPickaxe', 'goldPickaxe', 'diamondPickaxe']
+
+            if(currency > userProfile.currency) {
+                const embed = new MessageEmbed()
+                .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                .setColor('RED')
+                .setFooter(botname, client.user.displayAvatarURL())
+                .setTimestamp()
+                .setDescription(`${emojis.error} You don't have enough coins to buy ${displayName}!`)
+                .setThumbnail(thumbnail)
+                return message.reply({ embeds: [embed] })
+            }
+
+            const confirmation = new MessageEmbed()
+            .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+            .setColor('BLUE')
+            .setFooter(botname, client.user.displayAvatarURL())
+            .setTimestamp()
+            .setDescription(`${emojis.question} Are you sure you want to buy **${displayName}**? You will have to pay ${currency === 1 ? emojis.coin : emojis.coins} **${currency }** for it.`)
+            message.reply({ embeds: [confirmation], components: [confirmationRow] })
+
+            client.on('interactionCreate', async (interaction) => {
+                if(interaction.customId === 'buy-yes') {
+                    await profile.findOneAndUpdate({ userID: message.author.id }, { userID: message.author.id, pickaxeType: pickaxeType }, { upsert: true })
+                    const embed = new MessageEmbed()
+                    .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
+                    .setColor('GREEN')
+                    .setFooter(botname, client.user.displayAvatarURL())
+                    .setTimestamp()
+                    .setDescription(`${emojis.success} Successfully purchased **${displayName}** for **${currency}** ${currency === 1 ? 'coin' : 'coins'}!`)
+                    .setThumbnail(thumbnail)
+                    interaction.update({ embeds: [embed], components: [disabledRow] })
+                } else interaction.update({ embeds: [confirmation], components: [disabledRow] })
+            })
+        }
+
         const item = args[0]
         const amount = args[1]
         if(item.toLowerCase() === 'stone') buy('stone', amount, 3, 'stone')
-        if(item.toLowerCase() === 'copperore') buy('copperOre', amount, 3, 'copper ore')
+        if(item.toLowerCase() === 'copperore') buy('copperOre', amount, 7, 'copper ore')
+        if(item.toLowerCase() === 'ironore') buy('ironore', amount, 30, 'iron ore')
+        if(item.toLowerCase() === 'goldore') buy('goldore', amount, 100, 'gold ore')
+        if(item.toLowerCase() === 'diamondore') buy('diamondore', amount, 300, 'diamond ore')
         if(item.toLowerCase() === 'furnace') buy('furnace', amount, 50, 'furnace', 1)
+        if(userProfile.pickaxeType === 'Stone') if(item.toLowerCase() === 'copperpickaxe') buyPickaxe('Copper', 100, 'Copper Pickaxe')
+        if(userProfile.pickaxeType === 'Copper') if(item.toLowerCase() === 'ironpickaxe') buyPickaxe('Iron', 250, 'Iron Pickaxe')
+        if(userProfile.pickaxeType === 'Iron') if(item.toLowerCase() === 'goldpickaxe') buyPickaxe('Gold', 500, 'Gold Pickaxe')
+        if(userProfile.pickaxeType === 'Gold') if(item.toLowerCase() === 'diamondpickaxe') buyPickaxe('Diamond', 1000, 'Diamond Pickaxe')
     },
 }

@@ -24,6 +24,7 @@ module.exports = {
             ironOre: 0,
             goldOre: 0,
             diamondOre: 0,
+            furnace: 0,
         } }).save()
         const embed = new MessageEmbed()
         .setAuthor(message.author.username, message.author.displayAvatarURL({ dynamic: true }))
