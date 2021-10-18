@@ -17,16 +17,19 @@ module.exports = {
                     label: 'Ores Shop',
                     description: 'Buy & Sell Ores here!',
                     value: 'ores',
+                    emoji: emojis.copperOre,
                 },
                 {
                     label: 'Ingots Shop',
                     description: 'Sell the smelted ingots here!',
                     value: 'ingots',
+                    emoji: emojis.copper,
                 },
                 {
                     label: 'Misc Shop',
                     description: 'Buy Miscellenous items here!',
                     value: 'misc',
+                    emoji: emojis.furnace,
                 },
             ]),
         )
@@ -131,7 +134,3 @@ module.exports = {
         })
     },
 }
-
-/*
-
-            */
